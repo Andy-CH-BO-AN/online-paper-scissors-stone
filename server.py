@@ -2,7 +2,9 @@ import socket
 from _thread import *
 import sys
 
-server = "192.168.1.110"
+hostname = socket.gethostname()
+IPAddr = socket.gethostbyname(hostname)
+server = IPAddr
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,7 +32,7 @@ pos = [(0, 0), (100, 100)]
 
 def threaded_client(conn, player):
     conn.send(str.encode(make_pos(pos[player])))
-    reply = ''
+    reply = ""
     while True:
         try:
             data = read_pos(conn.recv(2048).decode())
@@ -44,20 +46,22 @@ def threaded_client(conn, player):
                     reply = pos[0]
                 else:
                     reply = pos[1]
-                print(f"Recieved: {data}")
-                print(f"Sending: {reply}")
+
+                print("Received: ", data)
+                print("Sending : ", reply)
+
             conn.sendall(str.encode(make_pos(reply)))
-        except Exception as e:
-            print(e)
+        except:
             break
+
     print("Lost connection")
     conn.close()
 
 
-current_player = 0
+currentPlayer = 0
 while True:
     conn, addr = s.accept()
-    print(f"Connected to: {addr}")
+    print("Connected to:", addr)
 
-    start_new_thread(threaded_client, (conn, current_player))
-    current_player += 1
+    start_new_thread(threaded_client, (conn, currentPlayer))
+    currentPlayer += 1
