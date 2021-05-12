@@ -40,7 +40,7 @@ def threaded_client(conn, p, gameID):
                     break
                 else:
                     if data == "reset":
-                        game.reset()
+                        game.resetWent()
                     elif data != "get":
                         game.play(p, data)
 
@@ -70,7 +70,7 @@ while True:
     p = 0
     gameId = (idCount - 1) // 2
     if idCount % 2 == 1:
-        games[gameId] = Game[gameId]
+        games[gameId] = Game(gameId)
         print('Creating a new game...')
     else:
         games[gameId].ready = True
